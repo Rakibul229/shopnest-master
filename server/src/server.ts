@@ -11,13 +11,15 @@ import cartRoutes from "./routes/cartRoutes";
 import addressRoutes from "./routes/addressRoutes";
 import orderRoutes from "./routes/orderRoutes";
 
-//load all your enviroment variables
+// Load environment variables
 dotenv.config();
-const app = express();
-const PORT = process.env.PORT || 3001;
 
+const app = express();
+const PORT = Number(process.env.PORT) || 3001; // ✅ Ensure PORT is a number
+
+// CORS Configuration
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: process.env.CLIENT_URL || "http://localhost:3000",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -27,8 +29,10 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
+// Initialize Prisma Client
 export const prisma = new PrismaClient();
 
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/coupon", couponRoutes);
@@ -37,14 +41,17 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/address", addressRoutes);
 app.use("/api/order", orderRoutes);
 
+// Default Route
 app.get("/", (req, res) => {
   res.send("Hello from E-Commerce backend");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is now running on port ${PORT}`);
+// Start Server
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
+// Graceful Shutdown for Prisma
 process.on("SIGINT", async () => {
   await prisma.$disconnect();
   process.exit();
