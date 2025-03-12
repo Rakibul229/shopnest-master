@@ -15,7 +15,7 @@ import orderRoutes from "./routes/orderRoutes";
 dotenv.config();
 
 const app = express();
-const PORT = Number(process.env.PORT) || 3001; // ✅ Ensure PORT is a number
+const PORT = Number(process.env.PORT) || 3001;
 
 // CORS Configuration
 const corsOptions = {
@@ -46,13 +46,5 @@ app.get("/", (req, res) => {
   res.send("Hello from E-Commerce backend");
 });
 
-// Start Server
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-// Graceful Shutdown for Prisma
-process.on("SIGINT", async () => {
-  await prisma.$disconnect();
-  process.exit();
-});
+// ✅ Vercel requires an exported handler instead of app.listen()
+export default app;
