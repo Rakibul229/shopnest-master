@@ -8,6 +8,7 @@
     ],
     "routes": [
       { "src": "/(.*)", "dest": "src/server.ts" }
-    ]
+    ],
+    "installCommand": "npm install && npm run prisma:generate"
   }
   
